@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="可道中學 · 中二數學遊戲關卡 — 分組因式分解與抽公因式練習" />
+  <title>華山數學關卡 · 中二數學遊戲</title>
+  <style>
+    :root {
+      --bg-top: #f7f0e6;
+      --bg-bottom: #e8d5c0;
+      --ink: #2c1810;
+      --ink-soft: #5c4033;
+      --accent: #8b3a2a;
+      --accent-hover: #6d2d21;
+      --card: #fffaf4;
+      --card-border: #c4a484;
+      --gold: #c9a227;
+      --shadow: rgba(44, 24, 16, 0.12);
+      --radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100dvh;
+      font-family: "PingFang TC", "Noto Sans TC", "Microsoft JhengHei",
+        "Heiti TC", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(ellipse 80% 50% at 50% -10%, #fff8ee 0%, transparent 55%),
+        linear-gradient(165deg, var(--bg-top) 0%, var(--bg-bottom) 100%);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Subtle mountain silhouette (CSS-only) */
+    .mountains {
+      position: fixed;
+      inset: auto 0 0 0;
+      height: min(28vh, 220px);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.22;
+      background:
+        linear-gradient(135deg, transparent 40%, #6b4c3b 40.5%, #6b4c3b 41%, transparent 41.5%) 12% 100% / 55% 100% no-repeat,
+        linear-gradient(145deg, transparent 35%, #5a3d2e 35.5%, #5a3d2e 36%, transparent 36.5%) 55% 100% / 70% 90% no-repeat,
+        linear-gradient(to top, #4a3226 0%, transparent 70%);
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 640px;
+      margin: 0 auto;
+      padding: clamp(1.25rem, 4vw, 2.5rem) clamp(1rem, 4vw, 1.5rem) 3rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: clamp(1.75rem, 5vw, 2.5rem);
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      background: rgba(139, 58, 42, 0.08);
+      border: 1px solid rgba(139, 58, 42, 0.25);
+      border-radius: 999px;
+      padding: 0.35rem 0.9rem;
+      margin-bottom: 0.85rem;
+    }
+
+    h1 {
+      font-size: clamp(1.75rem, 5.5vw, 2.35rem);
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--ink);
+      margin-bottom: 0.4rem;
+    }
+
+    .sword-line {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.65rem;
+      margin: 0.75rem 0 0.9rem;
+    }
+
+    .sword-line span {
+      height: 2px;
+      width: min(72px, 18vw);
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+
+    .sword-tip {
+      width: 10px;
+      height: 10px;
+      border: 2px solid var(--gold);
+      transform: rotate(45deg);
+      flex-shrink: 0;
+    }
+
+    .subtitle {
+      font-size: clamp(0.95rem, 2.8vw, 1.1rem);
+      color: var(--ink-soft);
+    }
+
+    .school {
+      margin-top: 0.35rem;
+      font-size: 0.9rem;
+      color: var(--ink-soft);
+      opacity: 0.85;
+    }
+
+    .cards {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    a.card {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      background: var(--card);
+      border: 2px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: clamp(1.15rem, 3.5vw, 1.45rem) clamp(1.1rem, 3.5vw, 1.5rem);
+      box-shadow: 0 6px 20px var(--shadow);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+      min-height: 5.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    a.card::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 6px;
+      background: linear-gradient(180deg, var(--accent), var(--gold));
+    }
+
+    a.card:hover,
+    a.card:focus-visible {
+      transform: translateY(-3px);
+      border-color: var(--accent);
+      box-shadow: 0 10px 28px rgba(44, 24, 16, 0.18);
+      outline: none;
+    }
+
+    a.card:active {
+      transform: translateY(-1px);
+    }
+
+    .card-num {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      margin-bottom: 0.35rem;
+    }
+
+    .card-title {
+      font-size: clamp(1.15rem, 3.8vw, 1.35rem);
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.45rem;
+      padding-right: 1.75rem;
+    }
+
+    .card-url {
+      font-size: 0.72rem;
+      color: var(--ink-soft);
+      word-break: break-all;
+      opacity: 0.9;
+      font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+      line-height: 1.4;
+    }
+
+    .card-arrow {
+      position: absolute;
+      right: 1.15rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.35rem;
+      color: var(--accent);
+      opacity: 0.7;
+      transition: opacity 0.15s, transform 0.15s;
+    }
+
+    a.card:hover .card-arrow,
+    a.card:focus-visible .card-arrow {
+      opacity: 1;
+      transform: translateY(-50%) translateX(3px);
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 2.25rem;
+      font-size: 0.8rem;
+      color: var(--ink-soft);
+      opacity: 0.75;
+    }
+
+    @media (min-width: 520px) {
+      .cards {
+        gap: 1.15rem;
+      }
+      a.card {
+        min-height: 6rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="mountains" aria-hidden="true"></div>
+  <div class="wrap">
+    <header>
+      <div class="badge">可道中學 · 中二數學</div>
+      <h1>華山數學關卡</h1>
+      <div class="sword-line" aria-hidden="true">
+        <span></span>
+        <div class="sword-tip"></div>
+        <span></span>
+      </div>
+      <p class="subtitle">選擇關卡開始練習 · 共四個關卡</p>
+      <p class="school">楊sir · 因式分解遊戲</p>
+    </header>
+
+    <nav class="cards" aria-label="數學遊戲關卡">
+      <a
+        class="card"
+        href="https://huashan-grouping.netlify.app/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <div class="card-num">關卡 一</div>
+        <div class="card-title">華山論數 · 分組因式分解</div>
+        <div class="card-url">https://huashan-grouping.netlify.app/</div>
+        <span class="card-arrow" aria-hidden="true">→</span>
+      </a>
+
+      <a
+        class="card"
+        href="https://huashan-common-factor.netlify.app/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <div class="card-num">關卡 二</div>
+        <div class="card-title">華山論劍 · 抽公因式</div>
+        <div class="card-url">https://huashan-common-factor.netlify.app/</div>
+        <span class="card-arrow" aria-hidden="true">→</span>
+      </a>
+
+      <a
+        class="card"
+        href="https://earnest-salmiakki-2dbf08.netlify.app/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <div class="card-num">關卡 三</div>
+        <div class="card-title">華山論數 · 完全平方恆等式</div>
+        <div class="card-url">https://earnest-salmiakki-2dbf08.netlify.app/</div>
+        <span class="card-arrow" aria-hidden="true">→</span>
+      </a>
+
+      <a
+        class="card"
+        href="https://sprightly-seahorse-8e8b0a.netlify.app/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <div class="card-num">關卡 四</div>
+        <div class="card-title">平方差恆等式</div>
+        <div class="card-url">https://sprightly-seahorse-8e8b0a.netlify.app/</div>
+        <span class="card-arrow" aria-hidden="true">→</span>
+      </a>
+    </nav>
+
+    <footer>
+      點擊卡片開啟新分頁 · 適合課堂投影與手機操作
+    </footer>
+  </div>
+</body>
+</html>
